@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainrot Math Academy - Grade 1 Mathematics</title>
+    <!-- All CSS is inline below (no Tailwind, no FontAwesome, no Google Fonts) -->
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', 'Trebuchet MS', sans-serif;
+            color: #1e1b4b;
+            background: linear-gradient(135deg, #f0abfc, #a5f3fc, #fde68a, #86efac);
+            background-size: 400% 400%;
+            animation: bgShift 12s ease infinite;
+        }
+        button { font-family: inherit; cursor: pointer; border: none; }
+        code { font-family: monospace; background: #ede9fe; color: #7c3aed; padding: 2px 6px; border-radius: 6px; font-weight: bold; }
+
+        /* ---------- Animations ---------- */
+        @keyframes bgShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes bounce { 0%,100% { transform: translateY(-20%); } 50% { transform: translateY(0); } }
+        @keyframes pulse { 50% { opacity: .6; } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes wiggle { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-160px) scale(1.6); } }
+        .bounce-slow { display: inline-block; animation: bounce 2s infinite; }
+        .bounce { animation: bounce 1s infinite; }
+        .pulse { animation: pulse 1s infinite; }
+        .wiggle { display: inline-block; animation: wiggle 1s ease-in-out infinite; }
+        .shake { animation: shake .4s; }
+
+        /* ---------- Header ---------- */
+        header {
+            position: sticky; top: 0; z-index: 40;
+            background: rgba(255,255,255,.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 4px solid #d946ef;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        }
+        .nav { max-width: 1150px; margin: 0 auto; padding: 0 20px; height: 80px; display: flex; align-items: center; justify-content: space-between; }
+        .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo {
+            width: 52px; height: 52px; border-radius: 16px; font-size: 30px;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(45deg, #d946ef, #06b6d4);
+            box-shadow: 0 4px 0 #86198f; transition: transform .2s;
+        }
+        .brand:hover .logo { transform: scale(1.08) rotate(-6deg); }
+        .brand-name {
+            font-size: 1.5rem; font-weight: 900;
+            background: linear-gradient(90deg, #c026d3, #7c3aed, #0891b2);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .brand-sub { font-size: .75rem; color: #64748b; font-weight: 700; letter-spacing: .5px; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .btn-home {
+            display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 16px;
+            background: #ecfeff; color: #0e7490; font-weight: 800; border: 2px solid #67e8f9; transition: background .2s;
+        }
+        .btn-home:hover { background: #cffafe; }
+        .aura-pill {
+            display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 16px;
+            background: linear-gradient(90deg, #a855f7, #ec4899); color: #fff; font-weight: 900;
+            border: 2px solid #f0abfc; box-shadow: 0 0 14px rgba(217,70,239,.6);
+        }
+
+        /* Scrolling slang ticker */
+        .ticker { background: #1e1b4b; color: #fde047; overflow: hidden; white-space: nowrap; font-weight: 800; font-size: .85rem; padding: 6px 0; }
+        .ticker-track { display: inline-block; animation: marquee 22s linear infinite; }
+
+        /* ---------- Main ---------- */
+        main { flex: 1; width: 100%; max-width: 1150px; margin: 0 auto; padding: 32px 20px; }
+
+        /* Hero */
+        .hero {
+            position: relative; overflow: hidden; margin-bottom: 40px; padding: 36px;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;
+            border-radius: 28px; color: #fff;
+            background: linear-gradient(90deg, #7c3aed, #d946ef, #f97316);
+            box-shadow: 0 16px 30px rgba(124,58,237,.35);
+        }
+        .hero-bg { position: absolute; right: -20px; bottom: -40px; font-size: 180px; opacity: .15; pointer-events: none; animation: spin 20s linear infinite; }
+        .hero-text { max-width: 640px; z-index: 1; }
+        .chip {
+            display: inline-block; margin-bottom: 12px; padding: 6px 16px; border-radius: 999px;
+            background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3);
+            font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .hero h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 900; margin-bottom: 10px; line-height: 1.15; }
+        .hero p { font-size: 1.05rem; line-height: 1.6; color: #fdf4ff; }
+        .hero-stat {
+            z-index: 1; min-width: 170px; text-align: center; padding: 18px; border-radius: 20px;
+            background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3);
+        }
+        .hero-stat small { display: block; font-size: .75rem; font-weight: 800; text-transform: uppercase; color: #fae8ff; margin-bottom: 4px; }
+        .hero-stat b { font-size: 2rem; }
+
+        /* Section title */
+        .section-title { font-size: 1.6rem; font-weight: 900; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+
+        /* Topic grid + cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        .card {
+            position: relative; overflow: hidden; cursor: pointer;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: #fff; border: 3px solid #1e1b4b; border-radius: 26px; padding: 24px;
+            box-shadow: 6px 6px 0 #1e1b4b; transition: transform .2s, box-shadow .2s;
+        }
+        .card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 #1e1b4b; }
+        .card-blob { position: absolute; top: 0; right: 0; width: 130px; height: 130px; border-bottom-left-radius: 100%; opacity: .15; pointer-events: none; transition: transform .3s; }
+        .card:hover .card-blob { transform: scale(1.15); }
+        .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .icon-box { width: 58px; height: 58px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,.15); }
+        .badge { padding: 6px 12px; border-radius: 999px; font-size: .75rem; font-weight: 800; border: 2px solid; }
+        .card-sub { font-size: .75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .card h3 { font-size: 1.5rem; font-weight: 900; margin: 4px 0 8px; transition: color .2s; }
+        .card:hover h3 { color: #c026d3; }
+        .card-desc { font-size: .9rem; color: #475569; margin-bottom: 24px; line-height: 1.5; }
+        .card-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 2px dashed #e2e8f0; }
+        .card-aura { font-weight: 800; color: #a21caf; font-size: .9rem; }
+        .play-btn { padding: 10px 18px; border-radius: 16px; background: #facc15; color: #422006; font-weight: 900; font-size: .9rem; border: 2px solid #1e1b4b; transition: background .2s; }
+        .card:hover .play-btn { background: #eab308; }
+
+        /* Topic color themes */
+        .t-sky .icon-box, .t-sky .card-blob { background: linear-gradient(45deg, #38bdf8, #3b82f6); }
+        .t-sky .badge { background: #e0f2fe; color: #075985; border-color: #7dd3fc; }
+        .t-green .icon-box, .t-green .card-blob { background: linear-gradient(45deg, #34d399, #14b8a6); }
+        .t-green .badge { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+        .t-pink .icon-box, .t-pink .card-blob { background: linear-gradient(45deg, #f472b6, #f43f5e); }
+        .t-pink .badge { background: #fce7f3; color: #9d174d; border-color: #f9a8d4; }
+        .t-amber .icon-box, .t-amber .card-blob { background: linear-gradient(45deg, #fbbf24, #f97316); }
+        .t-amber .badge { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+        .t-violet .icon-box, .t-violet .card-blob { background: linear-gradient(45deg, #a78bfa, #a855f7); }
+        .t-violet .badge { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+
+        /* GitHub info card */
+        .info-card {
+            margin-top: 48px; padding: 28px; background: #fff; border-radius: 26px; border: 3px solid #a5f3fc;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;
+        }
+        .info-card h3 { font-size: 1.25rem; font-weight: 900; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .info-card p { font-size: .9rem; color: #475569; max-width: 640px; line-height: 1.6; }
+        .btn-dark { padding: 12px 22px; background: #1e1b4b; color: #fff; font-weight: 800; border-radius: 16px; font-size: .9rem; transition: background .2s; }
+        .btn-dark:hover { background: #312e81; }
+
+        /* ---------- Game view ---------- */
+        .game-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .btn-exit { padding: 8px 16px; background: #fff; border: 2px solid #1e1b4b; border-radius: 16px; font-weight: 800; font-size: .9rem; color: #1e1b4b; }
+        .btn-exit:hover { background: #fdf4ff; }
+        .game-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .q-count { padding: 6px 12px; border-radius: 999px; font-size: .75rem; font-weight: 800; background: #fef9c3; color: #713f12; border: 2px solid #fde047; }
+
+        .progress { width: 100%; height: 18px; background: rgba(255,255,255,.8); border: 2px solid #1e1b4b; border-radius: 999px; overflow: hidden; padding: 2px; margin-bottom: 32px; }
+        .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #d946ef, #06b6d4); transition: width .5s; }
+
+        .q-card { max-width: 680px; margin: 0 auto; text-align: center; background: #fff; border: 3px solid #1e1b4b; border-radius: 28px; padding: 32px; box-shadow: 8px 8px 0 #1e1b4b; }
+        .q-icon { width: 68px; height: 68px; margin: 0 auto 20px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 34px; }
+        .q-prompt { font-size: 1.4rem; font-weight: 800; margin-bottom: 14px; }
+        .q-big { font-size: 1.6rem; font-weight: 900; margin-bottom: 24px; }
+        .q-hint { font-size: .8rem; color: #94a3b8; margin-bottom: 14px; }
+        .visual-box { border: 3px dashed #e879f9; background: #fdf4ff; border-radius: 24px; padding: 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; min-height: 120px; font-size: 2.3rem; }
+        .visual-box .sign { font-weight: 900; color: #7c3aed; }
+        .taxed { opacity: .35; text-decoration: line-through; }
+
+        .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .options.two { grid-template-columns: repeat(2, 1fr); }
+        .option-btn {
+            padding: 16px 10px; background: #fff; color: #1e1b4b; font-weight: 900; font-size: 1.6rem;
+            border: 3px solid #cbd5e1; border-radius: 18px; box-shadow: 0 4px 0 #cbd5e1; transition: transform .1s, border-color .2s;
+        }
+        .option-btn.text { font-size: 1.1rem; }
+        .option-btn:hover:not(:disabled) { border-color: #d946ef; transform: translateY(-2px); }
+        .option-btn:active:not(:disabled) { transform: scale(.95); }
+        .option-btn:disabled { cursor: default; }
+        .option-btn.correct { border-color: #22c55e; background: #dcfce7; box-shadow: 0 4px 0 #16a34a; }
+        .option-btn.wrong { border-color: #f43f5e; background: #ffe4e6; box-shadow: 0 4px 0 #e11d48; }
+
+        #question-feedback { margin-bottom: 20px; min-height: 10px; }
+        .fb { padding: 14px; border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.15rem; border: 3px solid; }
+        .fb.good { background: #dcfce7; color: #166534; border-color: #86efac; }
+        .fb.bad { background: #ffe4e6; color: #9f1239; border-color: #fda4af; }
+
+        /* ---------- Footer ---------- */
+        footer { background: rgba(255,255,255,.7); border-top: 3px solid #d946ef; padding: 16px; text-align: center; font-size: .8rem; color: #475569; font-weight: 700; line-height: 1.6; }
+        footer span { color: #94a3b8; }
+
+        /* ---------- Modal ---------- */
+        .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background: rgba(30,27,75,.5); backdrop-filter: blur(4px); opacity: 0; transition: opacity .3s; }
+        .modal.hidden { display: none; }
+        .modal.show { opacity: 1; }
+        .modal-box { width: 100%; max-width: 380px; margin: 0 16px; padding: 32px; text-align: center; background: #fff; border-radius: 28px; border: 4px solid #d946ef; box-shadow: 0 0 40px rgba(217,70,239,.5); transform: scale(.9); transition: transform .3s; }
+        .modal.show .modal-box { transform: scale(1); }
+        .modal-emoji { width: 84px; height: 84px; margin: 0 auto 16px; border-radius: 50%; background: #fae8ff; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+        #reward-title { font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; }
+        #reward-desc { font-size: .95rem; color: #475569; margin-bottom: 24px; line-height: 1.5; }
+        #reward-desc .steps { text-align: left; font-size: .85rem; }
+        #reward-desc .steps p { margin-bottom: 8px; }
+        .btn-go { width: 100%; padding: 14px; font-size: 1.15rem; font-weight: 900; color: #fff; border-radius: 18px; background: linear-gradient(90deg, #22c55e, #06b6d4); box-shadow: 0 5px 0 #0e7490; }
+        .btn-go:hover { filter: brightness(1.08); }
+
+        /* Floating aura FX */
+        #fx-container { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+        .fx { position: absolute; font-size: 2rem; font-weight: 900; color: #a21caf; animation: floatUp 1.2s ease-out forwards; }
+
+        @media (max-width: 640px) {
+            .btn-home { display: none; }
+            .brand-name { font-size: 1.2rem; }
+            .hero { padding: 24px; text-align: center; justify-content: center; }
+            .grid { grid-template-columns: 1fr; }
+            .q-card { padding: 22px; }
+            .options { grid-template-columns: 1fr; }
+            .options.nums { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav">
+            <div class="brand" onclick="app.showDashboard()">
+                <div class="logo">🧠</div>
+                <div>
+                    <div class="brand-name">Brainrot Math 🗿</div>
+                    <div class="brand-sub">Grade 1 Aura Academy</div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button onclick="app.showDashboard()" class="btn-home">🏠 <span>Home</span></button>
+                <div class="aura-pill">✨ <span id="global-stars">0 Aura</span></div>
+            </div>
+        </div>
+        <div class="ticker">
+            <div class="ticker-track">
+                🗿 LOCK IN &nbsp;•&nbsp; +1000 AURA &nbsp;•&nbsp; NO CAP 🧢 &nbsp;•&nbsp; MATH IS BUSSIN 🔥 &nbsp;•&nbsp; SIGMA SOLVER 😎 &nbsp;•&nbsp; SKIBIDI SUMS 🚽 &nbsp;•&nbsp; W RIZZ 💯 &nbsp;•&nbsp; SHEESH 🥶 &nbsp;•&nbsp;
+                🗿 LOCK IN &nbsp;•&nbsp; +1000 AURA &nbsp;•&nbsp; NO CAP 🧢 &nbsp;•&nbsp; MATH IS BUSSIN 🔥 &nbsp;•&nbsp; SIGMA SOLVER 😎 &nbsp;•&nbsp; SKIBIDI SUMS 🚽 &nbsp;•&nbsp; W RIZZ 💯 &nbsp;•&nbsp; SHEESH 🥶 &nbsp;•&nbsp;
+            </div>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <main id="app-container">
+        <!-- Dynamic content injected here -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        🧠 Brainrot Grade 1 Math Activity • Built for GitHub Pages 🚀
+        <br>
+        <span>Made by Florenz A. Valdez • BSIT 3A</span>
+    </footer>
+
+    <!-- Reward / Celebration Modal -->
+    <div id="reward-modal" class="modal hidden">
+        <div class="modal-box">
+            <div class="modal-emoji bounce">🗿</div>
+            <h3 id="reward-title">Awesome Job!</h3>
+            <div id="reward-desc">You farmed aura and completed the challenge!</div>
+            <button onclick="app.closeRewardModal()" class="btn-go">Keep Grinding! 🚀</button>
+        </div>
+    </div>
+
+    <!-- Floating Celebration Helper (Visual FX) -->
+    <div id="fx-container"></div>
+
+    <script>
+        const mathTopics = [
+            {
+                id: 'counting',
+                title: 'No Cap Counting',
+                subtitle: 'Count the vibes up to 20!',
+                icon: '🔢',
+                theme: 't-sky',
+                description: 'Count moai, skulls, and silly critters. Real counters never cap. 🧢',
+                questions: [
+                    { type: 'count', target: 5, emoji: '🗿', prompt: 'How many moai are giving aura?' },
+                    { type: 'count', target: 8, emoji: '💀', prompt: 'Count the skulls (I\'m dead 💀)' },
+                    { type: 'count', target: 4, emoji: '🦈', prompt: 'How many sharks in sneakers are here?' },
+                    { type: 'compare', q: 'Which number has more aura: 7 or 4? 🗿', options: ['7', '4'], answer: 0 },
+                    { type: 'sequence', q: 'What comes after 6? 🤷 (you know the one...)', options: ['7', '5', '8'], answer: 0 }
+                ]
+            },
+            {
+                id: 'addition',
+                title: 'Aura Addition',
+                subtitle: 'Stack it up, sigma style!',
+                icon: '➕',
+                theme: 't-green',
+                description: 'Put groups together and watch your aura go UP. That\'s just math, bro.',
+                questions: [
+                    { type: 'equation', a: 2, b: 3, prompt: '2 🍕 + 3 🍕 = ?' },
+                    { type: 'equation', a: 4, b: 1, prompt: '4 🧃 + 1 🧃 = ?' },
+                    { type: 'equation', a: 3, b: 3, prompt: '3 🗿 + 3 🗿 = ?' },
+                    { type: 'equation', a: 5, b: 2, prompt: '5 🥁 + 2 🥁 = ?' },
+                    { type: 'equation', a: 1, b: 6, prompt: '1 😎 + 6 😎 = ?' }
+                ]
+            },
+            {
+                id: 'subtraction',
+                title: 'Fanum Tax Subtraction',
+                subtitle: 'Your snacks got taxed!',
+                icon: '➖',
+                theme: 't-pink',
+                description: 'Fanum took some of your snacks! Count what\'s left after the tax. 🍟',
+                questions: [
+                    { type: 'sub_eq', a: 5, b: 2, prompt: '5 🍟 - 2 🍟 = ?' },
+                    { type: 'sub_eq', a: 4, b: 1, prompt: '4 🍩 - 1 🍩 = ?' },
+                    { type: 'sub_eq', a: 6, b: 3, prompt: '6 🍗 - 3 🍗 = ?' },
+                    { type: 'sub_eq', a: 7, b: 4, prompt: '7 🍪 - 4 🍪 = ?' },
+                    { type: 'sub_eq', a: 3, b: 0, prompt: '3 🍔 - 0 🍔 = ?' }
+                ]
+            },
+            {
+                id: 'shapes',
+                title: 'Sigma Shapes & Patterns',
+                subtitle: 'Circles, squares & more!',
+                icon: '🔷',
+                theme: 't-amber',
+                description: 'Spot the shapes and finish the pattern. Only sigmas notice patterns. 😎',
+                questions: [
+                    { type: 'shape', q: 'Which shape has 3 equal sides and 3 corners?', options: ['Triangle 🔺', 'Square ⬜', 'Circle ⭕'], answer: 0 },
+                    { type: 'shape', q: 'What shape looks like a wheel or a ball?', options: ['Rectangle 📏', 'Circle ⭕', 'Square ⬜'], answer: 1 },
+                    { type: 'shape', q: 'Complete the pattern: 🗿, 💀, 🗿, 💀, ?', options: ['🗿', '💀', '🧢'], answer: 0 },
+                    { type: 'shape', q: 'How many corners does a square have?', options: ['3', '4', '5'], answer: 1 },
+                    { type: 'shape', q: 'Which shape has 4 equal straight sides?', options: ['Triangle 🔺', 'Square ⬜', 'Star ⭐'], answer: 1 }
+                ]
+            },
+            {
+                id: 'money',
+                title: 'Secure the Bag: Peso Money',
+                subtitle: 'Know your coins & bills!',
+                icon: '💰',
+                theme: 't-violet',
+                description: 'Learn Philippine peso coins, add money, and get your change. Bag secured. 💸',
+                questions: [
+                    { type: 'money', q: 'Which coin has the biggest value? 🪙', options: ['₱1', '₱5', '₱10'], answer: 2 },
+                    { type: 'money', q: 'You have ₱5 and ₱5. How much money is that?', options: ['₱10', '₱15', '₱5'], answer: 0 },
+                    { type: 'money', q: '₱10 + ₱1 = ?', options: ['₱9', '₱11', '₱12'], answer: 1 },
+                    { type: 'money', q: 'How many ₱1 coins make ₱5?', options: ['3', '5', '10'], answer: 1 },
+                    { type: 'money', q: 'A candy 🍬 costs ₱3. You pay ₱5. What is your change?', options: ['₱2', '₱3', '₱8'], answer: 0 }
+                ]
+            }
+        ];
+
+        // Brainrot reactions (kept kind for Grade 1 kids)
+        const winLines = ['W! Sheesh! 🥶', 'That\'s bussin! 🔥', 'Sigma move! 😎', 'Big brain energy! 🧠', 'No cap, you\'re him! 🧢'];
+        const lossLines = ['Small L, you\'ll bounce back! 💪', 'Not quite, keep locking in! 🔒', 'Almost! Keep grinding! 🗿'];
+        const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+        class MathApp {
+            constructor() {
+                this.loadState();
+                this.currentView = 'dashboard'; // 'dashboard' or 'game'
+                this.activeTopicId = null;
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.init();
+            }
+
+            loadState() {
+                let saved = null;
+                try { saved = localStorage.getItem('brainrot_math_progress_v1'); } catch (e) {}
+                if (saved) {
+                    try {
+                        this.progress = JSON.parse(saved);
+                    } catch(e) {
+                        this.progress = {};
+                    }
+                } else {
+                    this.progress = {}; // Format: { topicId: { stars: 10, completed: true } }
+                }
+            }
+
+            saveState() {
+                try { localStorage.setItem('brainrot_math_progress_v1', JSON.stringify(this.progress)); } catch (e) {}
+                this.updateTotalStarsDisplay();
+            }
+
+            getTotalStars() {
+                let total = 0;
+                for (let topicId in this.progress) {
+                    total += (this.progress[topicId]?.stars || 0);
+                }
+                return total;
+            }
+
+            updateTotalStarsDisplay() {
+                const el = document.getElementById('global-stars');
+                if (el) {
+                    el.innerText = `${this.getTotalStars()} Aura`;
+                }
+            }
+
+            init() {
+                this.updateTotalStarsDisplay();
+                this.render();
+            }
+
+            showDashboard() {
+                this.currentView = 'dashboard';
+                this.activeTopicId = null;
+                this.render();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            startTopic(topicId) {
+                this.currentView = 'game';
+                this.activeTopicId = topicId;
+                this.currentQuestionIndex = 0;
+                this.score = 0;
+                this.render();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            answerQuestion(selectedIndex, correctIndex) {
+                const topic = mathTopics.find(t => t.id === this.activeTopicId);
+                const feedbackEl = document.getElementById('question-feedback');
+
+                // Disable further clicks temporarily
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons.forEach(b => b.disabled = true);
+
+                // Highlight the correct answer (green) and the wrong pick (red)
+                if (buttons[correctIndex]) buttons[correctIndex].classList.add('correct');
+
+                if (selectedIndex === correctIndex) {
+                    this.score += 2;
+                    feedbackEl.innerHTML = `
+                        <div class="fb good pulse">
+                            <span style="font-size:1.6rem">🔥</span>
+                            <span>${pick(winLines)} (+2 Aura)</span>
+                        </div>
+                    `;
+                    this.triggerConfetti();
+                } else {
+                    if (buttons[selectedIndex]) buttons[selectedIndex].classList.add('wrong', 'shake');
+                    feedbackEl.innerHTML = `
+                        <div class="fb bad">
+                            <span style="font-size:1.6rem">💡</span>
+                            <span>${pick(lossLines)}</span>
+                        </div>
+                    `;
+                }
+
+                setTimeout(() => {
+                    this.currentQuestionIndex++;
+                    if (this.currentQuestionIndex < topic.questions.length) {
+                        this.renderGameView();
+                    } else {
+                        this.finishTopicGame();
+                    }
+                }, 1500);
+            }
+
+            finishTopicGame() {
+                const topicId = this.activeTopicId;
+                if (!this.progress[topicId]) {
+                    this.progress[topicId] = { stars: 0, completed: false };
+                }
+                const earnedStars = this.score;
+                this.progress[topicId].stars = Math.max(this.progress[topicId].stars, earnedStars);
+                this.progress[topicId].completed = true;
+                this.saveState();
+
+                // Show celebration modal
+                const title = document.getElementById('reward-title');
+                const desc = document.getElementById('reward-desc');
+
+                title.innerText = earnedStars >= 8 ? `GG! You're HIM! 🏆` : `Topic Completed! 🏆`;
+                desc.innerText = `You farmed ${earnedStars} aura points! Your brain is officially bussin. 🧠🔥`;
+                this.openModal();
+            }
+
+            openModal() {
+                const modal = document.getElementById('reward-modal');
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('show'), 10);
+            }
+
+            closeRewardModal() {
+                const modal = document.getElementById('reward-modal');
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    this.showDashboard();
+                }, 300);
+            }
+
+            triggerConfetti() {
+                const fx = document.getElementById('fx-container');
+                ['🗿', '+2 AURA', '🔥', '✨'].forEach((txt, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'fx';
+                    el.innerText = txt;
+                    el.style.left = `${Math.random() * 80 + 10}%`;
+                    el.style.top = `${Math.random() * 40 + 40}%`;
+                    el.style.animationDelay = `${i * 0.1}s`;
+                    fx.appendChild(el);
+                    setTimeout(() => el.remove(), 1600);
+                });
+            }
+
+            render() {
+                const container = document.getElementById('app-container');
+                if (this.currentView === 'dashboard') {
+                    container.innerHTML = this.getDashboardHTML();
+                } else if (this.currentView === 'game') {
+                    container.innerHTML = this.getGameHTML();
+                }
+            }
+
+            renderGameView() {
+                const wrapper = document.getElementById('game-dynamic-wrapper');
+                if (wrapper) {
+                    wrapper.innerHTML = this.getGameInnerHTML();
+                }
+            }
+
+            getDashboardHTML() {
+                const totalStars = this.getTotalStars();
+                return `
+                    <!-- Hero Banner -->
+                    <div class="hero">
+                        <div class="hero-bg">🧠</div>
+                        <div class="hero-text">
+                            <span class="chip">🎒 Grade 1 Mathematics</span>
+                            <h1>Welcome to Brainrot Math Academy! <span class="wiggle">🗿</span></h1>
+                            <p>Lock in, pick a topic, solve the problems, and farm aura points. Math is lowkey bussin, no cap. 🧢</p>
+                        </div>
+                        <div class="hero-stat">
+                            <small>Your Total Aura</small>
+                            <b>✨ ${totalStars}</b>
+                        </div>
+                    </div>
+
+                    <!-- Topics Grid -->
+                    <h2 class="section-title">🗺️ Choose Your Side Quest</h2>
+                    <div class="grid">
+                        ${mathTopics.map(topic => {
+                            const topicProgress = this.progress[topic.id] || { stars: 0, completed: false };
+                            return `
+                                <div onclick="app.startTopic('${topic.id}')" class="card ${topic.theme}">
+                                    <div class="card-blob"></div>
+                                    <div>
+                                        <div class="card-top">
+                                            <div class="icon-box">${topic.icon}</div>
+                                            <span class="badge">${topicProgress.completed ? '✨ Aura Farmed' : '🎮 Ready to Lock In'}</span>
+                                        </div>
+                                        <span class="card-sub">${topic.subtitle}</span>
+                                        <h3>${topic.title}</h3>
+                                        <p class="card-desc">${topic.description}</p>
+                                    </div>
+                                    <div class="card-bottom">
+                                        <span class="card-aura">✨ ${topicProgress.stars} Aura Earned</span>
+                                        <span class="play-btn">${topicProgress.completed ? 'Run It Back' : 'Let\'s Go'} →</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- GitHub Deployment Info Card -->
+                    <div class="info-card">
+                        <div>
+                            <h3>💻 Hosting on GitHub Pages</h3>
+                            <p>This single-file app can be published directly to GitHub Pages in seconds! Simply create a repository, name this file <code>index.html</code>, and enable GitHub Pages in your repository settings.</p>
+                        </div>
+                        <button onclick="app.showPublishModal()" class="btn-dark">📖 View Hosting Steps</button>
+                    </div>
+                `;
+            }
+
+            showPublishModal() {
+                const title = document.getElementById('reward-title');
+                const desc = document.getElementById('reward-desc');
+
+                title.innerText = `GitHub Pages Setup 🚀`;
+                desc.innerHTML = `
+                    <div class="steps">
+                        <p><strong>1.</strong> Create a new repository on GitHub.</p>
+                        <p><strong>2.</strong> Upload this code as <code>index.html</code> in the main branch.</p>
+                        <p><strong>3.</strong> Go to repository <strong>Settings</strong> &gt; <strong>Pages</strong>.</p>
+                        <p><strong>4.</strong> Select branch <code>main</code> / <code>root</code> and click Save!</p>
+                    </div>
+                `;
+                this.openModal();
+            }
+
+            getGameHTML() {
+                return `
+                    <div id="game-dynamic-wrapper">
+                        ${this.getGameInnerHTML()}
+                    </div>
+                `;
+            }
+
+            getGameInnerHTML() {
+                const topic = mathTopics.find(t => t.id === this.activeTopicId);
+                if (!topic) return '<div>Topic not found</div>';
+
+                const q = topic.questions[this.currentQuestionIndex];
+                const totalQ = topic.questions.length;
+                const progressPercent = Math.round((this.currentQuestionIndex / totalQ) * 100);
+
+                // Build question UI based on type
+                let questionVisualHTML = '';
+                let optionsHTML = '';
+
+                if (q.type === 'count') {
+                    let itemsStr = '';
+                    for (let i = 0; i < q.target; i++) {
+                        itemsStr += `<span class="bounce-slow" style="animation-delay: ${i * 0.1}s">${q.emoji}</span>`;
+                    }
+                    questionVisualHTML = `
+                        <div class="q-prompt">${q.prompt}</div>
+                        <div class="visual-box">${itemsStr}</div>
+                    `;
+                    // Generate options (target + some random options)
+                    let opts = [q.target, q.target + 1 > 15 ? 15 : q.target + 1, q.target - 1 < 1 ? q.target + 2 : q.target - 1];
+                    opts = [...new Set(opts)].sort(() => Math.random() - 0.5);
+                    const correctIdx = opts.indexOf(q.target);
+
+                    optionsHTML = `
+                        <div class="options nums">
+                            ${opts.map((opt, idx) => `
+                                <button onclick="app.answerQuestion(${idx}, ${correctIdx})" class="option-btn">${opt}</button>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (q.type === 'equation' || q.type === 'sub_eq') {
+                    const isAdd = q.type === 'equation';
+                    const answerVal = isAdd ? (q.a + q.b) : (q.a - q.b);
+                    const emoji = q.prompt.split(' ')[1];
+
+                    let aItems = '';
+                    for (let i = 0; i < q.a; i++) aItems += emoji;
+                    let bItems = '';
+                    for (let i = 0; i < q.b; i++) bItems += emoji;
+
+                    questionVisualHTML = `
+                        <div class="q-prompt">${q.prompt}</div>
+                        <p class="q-hint">${isAdd ? 'Count or calculate the total amount!' : 'The crossed-out snacks got Fanum taxed! 😭'}</p>
+                        <div class="visual-box">
+                            <span>${aItems}</span>
+                            <span class="sign">${isAdd ? '+' : '−'}</span>
+                            <span class="${isAdd ? '' : 'taxed'}">${bItems || '0'}</span>
+                        </div>
+                    `;
+
+                    let opts = [answerVal, answerVal + 1, answerVal - 1 < 0 ? answerVal + 2 : answerVal - 1];
+                    opts = [...new Set(opts)].sort(() => Math.random() - 0.5);
+                    const correctIdx = opts.indexOf(answerVal);
+
+                    optionsHTML = `
+                        <div class="options nums">
+                            ${opts.map((opt, idx) => `
+                                <button onclick="app.answerQuestion(${idx}, ${correctIdx})" class="option-btn">${opt}</button>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    // General multiple choice (compare, sequence, shape, money)
+                    questionVisualHTML = `<div class="q-big">${q.q}</div>`;
+                    optionsHTML = `
+                        <div class="options ${q.options.length === 2 ? 'two' : ''}">
+                            ${q.options.map((opt, idx) => `
+                                <button onclick="app.answerQuestion(${idx}, ${q.answer})" class="option-btn text">${opt}</button>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="game-top">
+                        <button onclick="app.showDashboard()" class="btn-exit">← Exit Quest</button>
+                        <div class="game-tags ${topic.theme}">
+                            <span class="badge">${topic.title}</span>
+                            <span class="q-count">Question ${this.currentQuestionIndex + 1} of ${totalQ}</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress">
+                        <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
+
+                    <!-- Game Question Card -->
+                    <div class="q-card ${topic.theme}">
+                        <div class="q-icon icon-box">${topic.icon}</div>
+
+                        ${questionVisualHTML}
+
+                        <div id="question-feedback"></div>
+
+                        ${optionsHTML}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize application instance
+        const app = new MathApp();
+    </script>
+</body>
+</html>
